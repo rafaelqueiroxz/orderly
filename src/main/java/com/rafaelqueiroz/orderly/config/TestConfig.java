@@ -1,14 +1,8 @@
 package com.rafaelqueiroz.orderly.config;
 
-import com.rafaelqueiroz.orderly.entities.Category;
-import com.rafaelqueiroz.orderly.entities.Order;
-import com.rafaelqueiroz.orderly.entities.Product;
-import com.rafaelqueiroz.orderly.entities.User;
+import com.rafaelqueiroz.orderly.entities.*;
 import com.rafaelqueiroz.orderly.entities.enums.OrderStatus;
-import com.rafaelqueiroz.orderly.repositories.CategoryRepository;
-import com.rafaelqueiroz.orderly.repositories.OrderRepository;
-import com.rafaelqueiroz.orderly.repositories.ProductRepository;
-import com.rafaelqueiroz.orderly.repositories.UserRepository;
+import com.rafaelqueiroz.orderly.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +26,9 @@ public class TestConfig implements CommandLineRunner {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
 
     @Override
@@ -68,6 +65,13 @@ public class TestConfig implements CommandLineRunner {
 
         userRepository.saveAll(Arrays.asList(user1, user2));
         orderRepository.saveAll(Arrays.asList(order1, order2, order3));
+
+        OrderItem orderItem1 = new OrderItem(order1, product1, 2, product1.getPrice());
+        OrderItem orderItem2 = new OrderItem(order1, product3, 1, product3.getPrice());
+        OrderItem orderItem3 = new OrderItem(order2, product3, 2, product3.getPrice());
+        OrderItem orderItem4 = new OrderItem(order3, product5, 2, product5.getPrice());
+
+        orderItemRepository.saveAll(Arrays.asList(orderItem1, orderItem2, orderItem3, orderItem4));
 
     }
 
