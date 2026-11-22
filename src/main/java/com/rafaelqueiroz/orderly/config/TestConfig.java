@@ -37,13 +37,6 @@ public class TestConfig implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        User user1 = new User(null, "Beatriz", "bia@gmail.com", "11 99999 9999", "123456");
-        User user2 = new User(null, "Luiz Felipe", "luiz@gmail.com", "11 88888 8888", "654321");
-
-        Order order1 = new Order(null, Instant.parse("2025-10-11T16:30:11Z"), OrderStatus.PAID, user1);
-        Order order2 = new Order(null, Instant.parse("2023-10-07T11:30:45Z"), OrderStatus.WAITING_PAYMENT, user2);
-        Order order3 = new Order(null, Instant.parse("2025-10-11T17:35:18Z"), OrderStatus.WAITING_PAYMENT, user1);
-
         Category category1 = new Category(null, "Eletronics");
         Category category2 = new Category(null, "Books");
         Category category3 = new Category(null, "Computers");
@@ -54,10 +47,27 @@ public class TestConfig implements CommandLineRunner {
         Product product4 = new Product(null, "PC Gamer", "Donec aliquet odio ac rhoncus cursus.", 1200.0, "");
         Product product5 = new Product(null, "Rails for Dummies", "Cras fringilla convallis sem vel faucibus.", 100.99, "");
 
-        userRepository.saveAll(Arrays.asList(user1, user2));
-        orderRepository.saveAll(Arrays.asList(order1, order2, order3));
         categoryRepository.saveAll(Arrays.asList(category1, category2, category3));
         productRepository.saveAll(Arrays.asList(product1, product2, product3, product4, product5));
+
+        product1.getCategories().add(category2);
+        product2.getCategories().add(category1);
+        product2.getCategories().add(category3);
+        product3.getCategories().add(category3);
+        product4.getCategories().add(category3);
+        product5.getCategories().add(category2);
+
+        productRepository.saveAll(Arrays.asList(product1, product2, product3, product4, product5));
+
+        User user1 = new User(null, "Beatriz", "bia@gmail.com", "11 99999 9999", "123456");
+        User user2 = new User(null, "Luiz Felipe", "luiz@gmail.com", "11 88888 8888", "654321");
+
+        Order order1 = new Order(null, Instant.parse("2025-10-11T16:30:11Z"), OrderStatus.PAID, user1);
+        Order order2 = new Order(null, Instant.parse("2023-10-07T11:30:45Z"), OrderStatus.WAITING_PAYMENT, user2);
+        Order order3 = new Order(null, Instant.parse("2025-10-11T17:35:18Z"), OrderStatus.WAITING_PAYMENT, user1);
+
+        userRepository.saveAll(Arrays.asList(user1, user2));
+        orderRepository.saveAll(Arrays.asList(order1, order2, order3));
 
     }
 
