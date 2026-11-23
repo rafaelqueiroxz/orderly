@@ -31,4 +31,16 @@ public class UserService {
         repository.deleteById(id);
     }
 
+    public User update(Long id, User user) {
+        User updatedUser = repository.getReferenceById(id);
+        updateData(updatedUser, user);
+        return repository.save(updatedUser);
+    }
+
+    private void updateData(User updatedUser, User user) {
+        updatedUser.setName(user.getName());
+        updatedUser.setEmail(user.getEmail());
+        updatedUser.setPhone(user.getPhone());
+    }
+
 }
