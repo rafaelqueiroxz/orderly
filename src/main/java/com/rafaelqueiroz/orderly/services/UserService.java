@@ -2,8 +2,12 @@ package com.rafaelqueiroz.orderly.services;
 
 import com.rafaelqueiroz.orderly.entities.User;
 import com.rafaelqueiroz.orderly.repositories.UserRepository;
+import com.rafaelqueiroz.orderly.services.exceptions.DatabaseException;
 import com.rafaelqueiroz.orderly.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,13 +33,26 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        repository.deleteById(id);
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException(id);
+        }
+
+        try {
+            repository.deleteById(id);
+            repository.flush();
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     public User update(Long id, User user) {
-        User updatedUser = repository.getReferenceById(id);
-        updateData(updatedUser, user);
-        return repository.save(updatedUser);
+        try {
+            User updatedUser = repository.getReferenceById(id);
+            updateData(updatedUser, user);
+            return repository.save(updatedUser);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
     }
 
     private void updateData(User updatedUser, User user) {
